@@ -58,7 +58,7 @@ def filter(imgmsg, choose):
         
         origin_img = img
 
-        # 圖像歸一化，且轉換為浮點型
+        # normalize圖像 且轉為float
         fImg = img.astype(np.float32)
         fImg = fImg / 255.0
         
@@ -96,7 +96,7 @@ def filter(imgmsg, choose):
         imgG = img[:, :, 1]
         imgR = img[:, :, 2] 
 
-        # 調整色調請調整這邊~~ 
+        # 調整色調 調這
         # 白平衡 -> 三個值變化相同
         # 冷色調(增加b分量) -> 除了b之外都增加
         # 暖色調(增加r分量) -> 除了r之外都增加
@@ -105,7 +105,7 @@ def filter(imgmsg, choose):
         rAve = cv2.mean(imgR)[0] + cold_rate
         aveGray = (int)(bAve + gAve + rAve) / 3
 
-        # 2. 計算各通道增益係數，並使用此係數計算結果
+        # 2. 計算各通道增益係數 並計算結果
         bCoef = aveGray / bAve
         gCoef = aveGray / gAve
         rCoef = aveGray / rAve
@@ -113,7 +113,6 @@ def filter(imgmsg, choose):
         imgG = np.floor((imgG * gCoef))
         imgR = np.floor((imgR * rCoef))
 
-        # 將原文第3部分的演算法做修改版，加快速度
         imgb = imgB
         imgb[imgb > 255] = 255
         
@@ -146,8 +145,8 @@ def filter(imgmsg, choose):
         return gaussian_out
     
     def modify_contrast_and_brightness(img, brightness=0 , contrast=-100):
-        # 上面做法的問題：有做到對比增強，白的的確更白了。
-        # 但沒有實現「黑的更黑」的效果
+        # 有做到對比增強 白的的確更白了。
+        # 但沒有 黑的更黑 的效果
 
         B = brightness / 255.0
         c = contrast / 255.0 
@@ -155,7 +154,7 @@ def filter(imgmsg, choose):
 
         img = (img - 127.5 * (1 - B)) * k + 127.5 * (1 + B)
         
-        # 所有值必須介於 0~255 之間，超過255 = 255，小於 0 = 0
+        # 值介於 0~255 之間，超過255 = 255，小於 0 = 0
         img = np.clip(img, 0, 255).astype(np.uint8)
 
         return img
@@ -188,7 +187,7 @@ def filter(imgmsg, choose):
 
         img = modify_color_temperature(img, cold_rate=20) # 看你要+多冷 
 
-        img = gaussian_noise(img, mean=0, sigma=0.05) # mean 平均, sigma 標準差
+        img = gaussian_noise(img, mean=0, sigma=0.05) 
     
         img = modify_contrast_and_brightness(img, brightness=20 , contrast=-35) # -255 ~ 255
     
@@ -251,4 +250,5 @@ def filter(imgmsg, choose):
             flt_name = 'col_pencil'
             img = pencil_sketch_col(img)
             cv2.imwrite(f'{flt_name}{choose}_{imgmsg}', img)
+
     '''
