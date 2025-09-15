@@ -1,4 +1,4 @@
-from PIL import Image #導入PIL
+from PIL import Image 
 from tqdm import tqdm
 
 def sketch(imgmsg):
@@ -42,3 +42,4 @@ def sketch(imgmsg):
                 new.putpixel((i, j), originalColor)
 
     new.save(f'sketch7_{imgmsg}')
+
